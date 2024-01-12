@@ -197,7 +197,7 @@ btn4.addEventListener("click", function () {
     if (movies.map(movie => movie.toLowerCase()).includes(movieName)) {
         result.textContent = `The movie can be rented.`;
     } else {
-        result.textContent = `The movie can"t be rented.`;
+        result.textContent = `The movie can't be rented.`;
     }
 
     document.getElementById("movieName").value = "";
