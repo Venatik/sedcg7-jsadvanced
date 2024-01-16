@@ -147,11 +147,20 @@ btn2.addEventListener("click", function () {
         ul.appendChild(li);
     }
 
+    document.getElementById("container2").appendChild(ul);
+
+    let container2 = document.getElementById("container2");
+
+    let oldList = container2.getElementsByTagName("ul")[0];
+    if (oldList) {
+        container2.removeChild(oldList);
+    }
+
+    container2.appendChild(ul);
+
     color = document.getElementById("pickColor2").value = "";
     fontSize = document.getElementById("fontSize2").value = "";
     items = document.getElementById("items").value = "";
-
-    document.getElementById("container2").appendChild(ul);
 });
 
 // =============================================================
@@ -187,7 +196,7 @@ btn3.addEventListener("submit", function (event) {
 
 // =============================================================
 
-let movies = ["Inception", "Interstellar", "The Dark Knight", "Memento", "The Prestige"];
+let movies = ["Star Wars", "Star Trek", "Warcraft", "Fight Club", "The Prestige"];
 let btn4 = document.getElementById("searchMovie");
 
 btn4.addEventListener("click", function () {
@@ -195,9 +204,11 @@ btn4.addEventListener("click", function () {
     let result = document.getElementById("result");
 
     if (movies.map(movie => movie.toLowerCase()).includes(movieName)) {
-        result.textContent = `The movie can be rented.`;
+        result.textContent = "The movie can be rented.";
+        result.style.color = "green";
     } else {
-        result.textContent = `The movie can't be rented.`;
+        result.textContent = "The movie can't be rented.";
+        result.style.color = "red";
     }
 
     document.getElementById("movieName").value = "";
