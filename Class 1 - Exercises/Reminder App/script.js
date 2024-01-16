@@ -8,8 +8,10 @@ function createReminder(title, priority, color, description) {
 }
 
 let reminders = [];
+let addReminder = document.getElementById("addReminder");
+let showReminder = document.getElementById("showReminders");
 
-document.getElementById("addReminder").addEventListener("click", function () {
+addReminder.addEventListener("click", function () {
     let title = document.getElementById("title").value;
     let priority = document.getElementById("priority").value;
     let color = document.getElementById("colorPick").value;
@@ -18,13 +20,15 @@ document.getElementById("addReminder").addEventListener("click", function () {
     let reminder = createReminder(title, priority, color, description);
     reminders.push(reminder);
 
+    console.log(reminder);
+
     document.getElementById("title").value = "";
     document.getElementById("priority").value = "";
     document.getElementById("colorPick").value = "";
     document.getElementById("description").value = "";
 });
 
-document.getElementById("showReminders").addEventListener("click", function () {
+showReminder.addEventListener("click", function () {
     let tableBody = document.getElementById("remindersTable").getElementsByTagName("tbody")[0];
 
     tableBody.innerHTML = "";
