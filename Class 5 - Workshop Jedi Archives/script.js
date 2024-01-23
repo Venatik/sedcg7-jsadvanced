@@ -30,7 +30,7 @@ function makePersonRequest() {
 
             createTable(data.results);
 
-            nextPersonRequest();
+            // nextPersonRequest();
         })
         .catch(error => {
             loadingIcon.style.display = "none";
