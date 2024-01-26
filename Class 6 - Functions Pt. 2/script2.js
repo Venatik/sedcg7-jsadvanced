@@ -69,6 +69,26 @@ let filteredArrayWithArrow = numbers.filter(number => number > 2);
 
 console.log("Filtered array with .filter() and an arrow function:", filteredArrayWithArrow);
 
+// ============== REDUCE ==============
+// .reduce() - we will return the sum (or other operation) of all the elements of an array.
+
+console.log("============== REDUCE ==============");
+
+let sumReduce = numbers.reduce((total, number) => total + number);
+
+console.log("Sum of elements in an array using .reduce():", sumReduce);
+
+// filter out all the elements bigger than 3
+// increase their value by the number 5
+// add the sum of each element
+
+let result = numbers
+    .filter(number => number > 3)
+    .map(number => number + 5)
+    .reduce((total, number) => total + number);
+
+console.log(result);
+
 // ==============  ==============
 // 
 
