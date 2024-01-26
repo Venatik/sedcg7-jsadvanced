@@ -1,10 +1,25 @@
 let btn = document.getElementById("personPicture");
 let btn2 = document.getElementById("shipPicture");
-let previos = document.getElementById("prevButton");
-let next = document.getElementById("nextButton");
+let nextPersonButton = document.getElementById("nextPerson");
+let prevPersonButton = document.getElementById("prevPerson");
+let nextShipButton = document.getElementById("nextShip");
+let prevShipButton = document.getElementById("prevShip");
+let currentPage = 1;
+let shipPage = 1;
 
-btn.addEventListener("click", makePersonRequest);
-btn2.addEventListener("click", makeShipRequest);
+btn.addEventListener("click", function () {
+    nextShipButton.style.display = "none";
+    prevShipButton.style.display = "none";
+    currentPage = 1;
+    makePersonRequest();
+});
+
+btn2.addEventListener("click", function () {
+    nextPersonButton.style.display = "none";
+    prevPersonButton.style.display = "none";
+    shipPage = 1;
+    makeShipRequest();
+});
 
 function makePersonRequest() {
     let loadingIcon = document.getElementById("loader");
@@ -17,8 +32,10 @@ function makePersonRequest() {
     tableDiv.appendChild(loadingIcon);
 
     loadingIcon.style.display = "block";
+    nextPersonButton.style.display = "block";
+    prevPersonButton.style.display = currentPage > 1 ? "block" : "none";
 
-    fetch("https://swapi.dev/api/people/?page=1")
+    fetch(`https://swapi.dev/api/people/?page=${currentPage}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error("Error loading data.");
@@ -30,7 +47,6 @@ function makePersonRequest() {
 
             createTable(data.results);
 
-            // nextPersonRequest();
         })
         .catch(error => {
             loadingIcon.style.display = "none";
@@ -38,6 +54,23 @@ function makePersonRequest() {
             console.error("Error", error);
         });
 }
+
+function nextPersonRequest() {
+    currentPage++;
+    makePersonRequest();
+}
+
+function prevPersonRequest() {
+    if (currentPage > 1) {
+        currentPage--;
+        makePersonRequest();
+    }
+}
+
+nextPersonButton.addEventListener("click", nextPersonRequest);
+prevPersonButton.addEventListener("click", prevPersonRequest);
+nextShipButton.addEventListener("click", nextShipRequest);
+prevShipButton.addEventListener("click", prevShipRequest);
 
 function createTable(people) {
     let table = document.createElement("table");
@@ -112,8 +145,10 @@ function makeShipRequest() {
     tableDiv.appendChild(loadingIcon);
 
     loadingIcon.style.display = "block";
+    nextShipButton.style.display = "block";
+    prevShipButton.style.display = shipPage > 1 ? "block" : "none";
 
-    fetch("https://swapi.dev/api/starships/?page=1")
+    fetch(`https://swapi.dev/api/starships/?page=${shipPage}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error("Error loading data.");
@@ -131,6 +166,19 @@ function makeShipRequest() {
             console.error("Error", error);
         });
 }
+
+function nextShipRequest() {
+    shipPage++;
+    makeShipRequest();
+}
+
+function prevShipRequest() {
+    if (shipPage > 1) {
+        shipPage--;
+        makeShipRequest();
+    }
+}
+
 
 function createTable2(ships) {
     let tableDiv = document.getElementById("tableDiv");
@@ -189,7 +237,6 @@ function createTable2(ships) {
     table.appendChild(tbody);
     tableDiv.appendChild(table);
 }
-
 
 /* To do list:
     1. Add validation to people capacity

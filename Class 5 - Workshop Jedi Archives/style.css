@@ -81,3 +81,10 @@ a:hover {
   align-items: center;
   width: 75%;
 }
+
+#navigationShip {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 75%;
+}
