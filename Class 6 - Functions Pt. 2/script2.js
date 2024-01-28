@@ -89,7 +89,17 @@ let result = numbers
 
 console.log(result);
 
-// ==============  ==============
+// ============== SORT ==============
 // 
 
-console.log("==============  ==============");
+console.log("============== SORT ==============");
+// with .sort we will sort the elements of the array in descending and an ascending order
+
+let sortedNums = numbers.sort();
+console.log("sorted nums", sortedNums);
+
+let numbersDescending = numbers.sort((first, second) => second - first);
+console.log("sorted array - Descending", numbersDescending);
+
+let numbersAscending = numbersDescending.sort((first, second) => first - second);
+console.log("Ascending", numbersAscending);
