@@ -239,7 +239,12 @@ console.log("============== REVERSE ==============");
 
 let reversedArray = cityArray.reverse();
 let reversedArray2 = [...cityArray].reverse(); // This will create a copy of the array and reverse it.
-console.log(reversedArray);
-console.log(reversedArray2);
-console.log(cityArray);
+console.log(`The original array mutated: ${reversedArray}`);
+console.log(`New array: ${reversedArray2}`);
 
+let numbersReversed = [...numbers].reverse();
+console.log(`New and reversed array: ${numbersReversed}`);
+
+// Real COPY of an array
+let newNumbers = [...numbers];
+console.log(newNumbers);
