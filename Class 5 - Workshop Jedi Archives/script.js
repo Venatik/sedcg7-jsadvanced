@@ -240,49 +240,7 @@ function createTable2(ships) {
 
 /* To do list:
     1. Add validation to people capacity
-    2. Add logic for previous/next buttons (currently display: none)
-    3. Fix up all data as done in: person.gender and ship.passengers
-    4. Limit ship.cost
+    2. Fix up all data as done in: person.gender and ship.passengers
+    3. Limit ship.cost
 */
 
-/*
-Pagination:
-Counter to keep track of page
-Next increases count
-
-Maybe reuse function when we originally fetch data. Pass url parameter to the button.
-Write function to display next and fetch new set of data.
-*/
-
-// function nextPersonRequest() {
-//     let loadingIcon = document.getElementById("loader");
-//     let next = document.getElementById("nextButton");
-//     let tableDiv = document.getElementById("tableDiv");
-
-//     while (tableDiv.firstChild) {
-//         tableDiv.removeChild(tableDiv.firstChild);
-//     }
-
-//     tableDiv.appendChild(loadingIcon);
-
-//     loadingIcon.style.display = "block";
-//     next.style.display = "block";
-
-//     fetch("https://swapi.dev/api/people/?page=2")
-//         .then(response => {
-//             if (!response.ok) {
-//                 throw new Error("Error loading data.");
-//             }
-//             return response.json();
-//         })
-//         .then(data => {
-//             loadingIcon.style.display = "none";
-
-//             createTable(data.results);
-//         })
-//         .catch(error => {
-//             loadingIcon.style.display = "none";
-
-//             console.error("Error", error);
-//         });
-// }
