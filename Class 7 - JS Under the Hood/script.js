@@ -57,3 +57,8 @@ function printData(data) {
 }
 
 makeCall("https://swapi.dev/api/people/1", printData);
+
+// Callback Hell - Asynchronous execution is when multiple things are executed at the same time.
+// Callbacks make sure async code executes in the right order
+// A huge callback tree is called callback hell
+

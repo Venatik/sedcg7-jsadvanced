@@ -1,4 +1,4 @@
-// JSON Example
+// ============== JSON Example ==============
 
 let myJson = `{
     "trainer": "Trainer Name",
@@ -23,7 +23,7 @@ console.log(jsObject.students[2]);
 let newJson = JSON.stringify(jsObject);
 console.log(newJson);
 
-// Plain Javascript XML/HTTP request
+// ============== Plain Javascript XML/HTTP request ==============
 let xhrButton = document.getElementById("sendRequest");
 
 xhrButton.addEventListener("click", function () {
@@ -47,7 +47,7 @@ xhrButton.addEventListener("click", function () {
     xhr.send();
 });
 
-// Fetch request
+// ============== Fetch request ==============
 let fetchRequestBtn = document.getElementById("fetchRequestBtn");
 
 fetchRequestBtn.addEventListener("click", function () {
