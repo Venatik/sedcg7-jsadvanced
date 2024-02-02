@@ -156,4 +156,10 @@ async function getDataAsync() {
     showDocuments(importantData);
 }
 
-getDataAsync();
+try {
+    getDataAsync();
+} catch (error) {
+    console.log("Something went wrong.");
+} // finally {
+//     console.log("This also works in a tryCatch block.");
+// }
