@@ -224,10 +224,17 @@ function createTable2(ships) {
         row.appendChild(costCell);
 
         let capacityCell = document.createElement("td");
-        if (ship.passengers === "n/a") {
-            ship.passengers = "Unknown";
+        let crew = isNaN(parseInt(ship.crew.replace(/,/g, ''))) ? 0 : parseInt(ship.crew.replace(/,/g, ''));
+        let passengers = isNaN(parseInt(ship.passengers.replace(/,/g, ''))) ? 0 : parseInt(ship.passengers.replace(/,/g, ''));
+        let totalCapacity;
+
+        if (crew > 0 && passengers > 0) {
+            totalCapacity = crew + passengers;
+        } else {
+            totalCapacity = crew > 0 ? crew : passengers;
         }
-        capacityCell.textContent = `${ship.crew} crew and ${ship.passengers} passengers`;
+
+        capacityCell.textContent = `${totalCapacity} total capacity`;
         row.appendChild(capacityCell);
 
         let classCell = document.createElement("td");
