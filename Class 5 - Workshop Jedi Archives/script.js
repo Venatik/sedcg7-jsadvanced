@@ -248,10 +248,12 @@ function createTable2(ships) {
     tableDiv.appendChild(table);
 }
 
+
+
 /* To do list:
-    1. Add validation to people capacity
-    2. Fix up all data as done in: person.gender and ship.passengers
-    3. Limit ship.cost
+    1. Add validation to people capacity - done
+    2. Fix up all data as done in: person.gender and ship.passengers - done
+    3. Limit ship.cost - done
 */
 
 /* 
@@ -263,4 +265,6 @@ function createTable2(ships) {
     Implement search functionality
     Code refactoring (use async/await, reduce code duplication etc.)
 
+
+    https://swapi.dev/api/people/?search=
 */
