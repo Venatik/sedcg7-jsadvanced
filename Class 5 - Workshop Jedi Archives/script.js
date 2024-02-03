@@ -265,6 +265,8 @@ function createTable2(ships) {
     Implement search functionality
     Code refactoring (use async/await, reduce code duplication etc.)
 
+    https://github.com/sedc-codecademy/mkwd12-04-ajs/blob/main/G7/Class05/Workshop-part1/EXTRAFEATURES.md
+
 
     https://swapi.dev/api/people/?search=
 */
