@@ -179,7 +179,6 @@ function prevShipRequest() {
     }
 }
 
-
 function createTable2(ships) {
     let tableDiv = document.getElementById("tableDiv");
 
@@ -217,7 +216,11 @@ function createTable2(ships) {
         row.appendChild(manufacturerCell);
 
         let costCell = document.createElement("td");
-        costCell.textContent = ship.cost_in_credits;
+        let cost = ship.cost_in_credits;
+        if (cost >= 1000000) {
+            cost = (cost / 1000000).toFixed(0) + "M";
+        }
+        costCell.textContent = `${cost} Credits`;
         row.appendChild(costCell);
 
         let capacityCell = document.createElement("td");
@@ -244,3 +247,13 @@ function createTable2(ships) {
     3. Limit ship.cost
 */
 
+/* 
+    Sorting in the tables
+    Loading animation while the application gets the data
+    Nice error message when a request has been denied ( Ex: unavailable, request limit, no page like that, access denied )
+    Add planets table
+    Add pagination button for every page (create them dynamically)
+    Implement search functionality
+    Code refactoring (use async/await, reduce code duplication etc.)
+
+*/
