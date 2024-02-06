@@ -1,69 +1,124 @@
 let btn = document.getElementById("personPicture");
 let btn2 = document.getElementById("shipPicture");
+let loadingIcon = document.getElementById("loader");
 let nextPersonButton = document.getElementById("nextPerson");
 let prevPersonButton = document.getElementById("prevPerson");
 let nextShipButton = document.getElementById("nextShip");
 let prevShipButton = document.getElementById("prevShip");
 let currentPage = 1;
 let shipPage = 1;
+let peopleData = null;
+let nextPeoplePage = null;
+let prevPeoplePage = null;
+let nextShipPage = null;
+let prevShipPage = null;
+let shipData = null;
+let planetData = null;
+const base_url_people = "https://swapi.dev/api/people/";
+const base_url_ship = "https://swapi.dev/api/starships/"
 
 btn.addEventListener("click", function () {
     nextShipButton.style.display = "none";
     prevShipButton.style.display = "none";
     currentPage = 1;
-    makePersonRequest();
+    fetchPeople();
 });
 
 btn2.addEventListener("click", function () {
     nextPersonButton.style.display = "none";
     prevPersonButton.style.display = "none";
     shipPage = 1;
-    makeShipRequest();
+    fetchShips();
 });
 
-function makePersonRequest() {
-    let loadingIcon = document.getElementById("loader");
+async function fetchPeople(url = `${base_url_people}?page=${currentPage}`) {
     let tableDiv = document.getElementById("tableDiv");
-
-    while (tableDiv.firstChild) {
-        tableDiv.removeChild(tableDiv.firstChild);
-    }
+    tableDiv.innerHTML = "";
 
     tableDiv.appendChild(loadingIcon);
-
     loadingIcon.style.display = "block";
-    nextPersonButton.style.display = "block";
-    prevPersonButton.style.display = currentPage > 1 ? "block" : "none";
 
-    fetch(`https://swapi.dev/api/people/?page=${currentPage}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Error loading data.");
-            }
-            return response.json();
-        })
-        .then(data => {
-            loadingIcon.style.display = "none";
+    try {
+        let response = await fetch(url);
+        if (!response.ok) {
+            throw new Error("Error loading data. Please try again.");
+        }
+        let data = await response.json();
+        peopleData = data.results;
+        nextPeoplePage = data.next;
+        prevPeoplePage = data.previous;
 
-            createTable(data.results);
+        nextPersonButton.style.display = "block";
+        if (currentPage > 1) {
+            prevPersonButton.style.display = "block";
+        } else {
+            prevPersonButton.style.display = "none";
+        }
 
-        })
-        .catch(error => {
-            loadingIcon.style.display = "none";
-
-            console.error("Error", error);
-        });
+        createTable();
+    } catch (error) {
+        console.log(error);
+    } finally {
+        loadingIcon.style.display = "none";
+    }
 }
 
-function nextPersonRequest() {
+
+async function fetchShips(url = `${base_url_ship}?page=${shipPage}`) {
+    let tableDiv = document.getElementById("tableDiv");
+    tableDiv.innerHTML = "";
+
+    tableDiv.appendChild(loadingIcon);
+    loadingIcon.style.display = "block";
+
+    try {
+        let response = await fetch(url);
+        if (!response.ok) {
+            throw new Error("Error loading data. Please try again.");
+        }
+        let data = await response.json();
+        shipData = data.results;
+        nextShipPage = data.next;
+        prevShipPage = data.previous;
+
+        nextShipButton.style.display = "block";
+        if (shipPage > 1) {
+            prevShipButton.style.display = "block";
+        } else {
+            prevShipButton.style.display = "none";
+        }
+
+        createTable2();
+    } catch (error) {
+        console.log(error);
+    } finally {
+        loadingIcon.style.display = "none";
+    }
+}
+
+function displayLoadingIcon() {
+    document.getElementById("loader").style.display = "block";
+}
+
+function hideLoadingIcon() {
+    document.getElementById("loader").style.display = "none";
+}
+
+async function nextPersonRequest() {
+    if (nextPeoplePage) {
+        await fetchPeople(nextPeoplePage);
+    }
     currentPage++;
-    makePersonRequest();
+    fetchPeople();
 }
 
-function prevPersonRequest() {
+async function prevPersonRequest() {
+    if (prevPeoplePage) {
+        await fetchPeople(prevPeoplePage);
+    }
     if (currentPage > 1) {
         currentPage--;
-        makePersonRequest();
+        fetchPeople();
     }
 }
 
@@ -72,10 +127,13 @@ prevPersonButton.addEventListener("click", prevPersonRequest);
 nextShipButton.addEventListener("click", nextShipRequest);
 prevShipButton.addEventListener("click", prevShipRequest);
 
-function createTable(people) {
-    let table = document.createElement("table");
+// createTable = people data
+function createTable() {
+    let table = document.getElementById("table") || document.createElement("table");
     let thead = document.createElement("thead");
     let tbody = document.createElement("tbody");
+    let tableDiv = document.getElementById("tableDiv");
+    tableDiv.innerHTML = "";
 
     let headers = ["Name", "Height", "Mass", "Gender", "Birth Year", "Appearances"];
     let headerRow = document.createElement("tr");
@@ -89,9 +147,20 @@ function createTable(people) {
     thead.appendChild(headerRow);
     table.appendChild(thead);
 
-    let rowCount = Math.min(people.length, 10);
-    for (let i = 0; i < rowCount; i++) {
-        let person = people[i];
+    peopleData.forEach(person => {
+        if (person.gender === "n/a") {
+            person.gender = "Unknown";
+        }
+        if (person.gender === "male") {
+            person.gender = "Male";
+        }
+        if (person.gender === "female") {
+            person.gender = "Female";
+        }
+        if (person.gender === "hermaphrodite") {
+            person.gender = "Hermaphrodite"
+        }
+
         let row = document.createElement("tr");
 
         let nameCell = document.createElement("td");
@@ -107,16 +176,8 @@ function createTable(people) {
         row.appendChild(massCell);
 
         let genderCell = document.createElement("td");
-        if (person.gender === "n/a") {
-            person.gender = "Unknown";
-        }
-        if (person.gender === "male") {
-            person.gender = "Male";
-        }
-        if (person.gender === "female") {
-            person.gender = "Female";
-        }
-        genderCell.textContent = person.gender;
+        genderCell.textContent = person.gender === "n/a" ? "Unknown" : person.gender;
+
         row.appendChild(genderCell);
 
         let birthYearCell = document.createElement("td");
@@ -128,58 +189,32 @@ function createTable(people) {
         row.appendChild(appearancesCell);
 
         tbody.appendChild(row);
-    }
+    });
 
     table.appendChild(tbody);
-    document.getElementById("tableDiv").appendChild(table);
+    tableDiv.appendChild(table);
 }
 
-function makeShipRequest() {
-    let loadingIcon = document.getElementById("loader");
-    let tableDiv = document.getElementById("tableDiv");
-
-    while (tableDiv.firstChild) {
-        tableDiv.removeChild(tableDiv.firstChild);
+async function nextShipRequest() {
+    if (nextShipPage) {
+        await fetchShips(nextShipPage);
     }
-
-    tableDiv.appendChild(loadingIcon);
-
-    loadingIcon.style.display = "block";
-    nextShipButton.style.display = "block";
-    prevShipButton.style.display = shipPage > 1 ? "block" : "none";
-
-    fetch(`https://swapi.dev/api/starships/?page=${shipPage}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Error loading data.");
-            }
-            return response.json();
-        })
-        .then(data => {
-            loadingIcon.style.display = "none";
-
-            createTable2(data.results);
-        })
-        .catch(error => {
-            loadingIcon.style.display = "none";
-
-            console.error("Error", error);
-        });
-}
-
-function nextShipRequest() {
     shipPage++;
-    makeShipRequest();
+    fetchShips();
 }
 
-function prevShipRequest() {
+async function prevShipRequest() {
+    if (prevShipPage) {
+        await fetchShips(prevShipPage);
+    }
     if (shipPage > 1) {
         shipPage--;
-        makeShipRequest();
+        fetchShips;
     }
 }
 
-function createTable2(ships) {
+// createTable2 = ship data
+function createTable2() {
     let tableDiv = document.getElementById("tableDiv");
 
     let table = document.createElement("table");
@@ -198,9 +233,7 @@ function createTable2(ships) {
     thead.appendChild(headerRow);
     table.appendChild(thead);
 
-    let rowCount = Math.min(ships.length, 10);
-    for (let i = 0; i < rowCount; i++) {
-        let ship = ships[i];
+    shipData.forEach(ship => {
         let row = document.createElement("tr");
 
         let nameCell = document.createElement("td");
@@ -223,7 +256,7 @@ function createTable2(ships) {
         costCell.textContent = `${cost} Credits`;
         row.appendChild(costCell);
 
-        let capacityCell = document.createElement("td");
+        let peopleCapacityCell = document.createElement("td");
         let crew = isNaN(parseInt(ship.crew.replace(/,/g, ''))) ? 0 : parseInt(ship.crew.replace(/,/g, ''));
         let passengers = isNaN(parseInt(ship.passengers.replace(/,/g, ''))) ? 0 : parseInt(ship.passengers.replace(/,/g, ''));
         let totalCapacity;
@@ -234,21 +267,103 @@ function createTable2(ships) {
             totalCapacity = crew > 0 ? crew : passengers;
         }
 
-        capacityCell.textContent = `${totalCapacity} total capacity`;
-        row.appendChild(capacityCell);
+        peopleCapacityCell.textContent = `${totalCapacity} total capacity`;
+        row.appendChild(peopleCapacityCell);
 
         let classCell = document.createElement("td");
         classCell.textContent = ship.starship_class;
         row.appendChild(classCell);
 
-        tbody.appendChild(row);
-    }
+        table.appendChild(row);
+    });
 
     table.appendChild(tbody);
     tableDiv.appendChild(table);
 }
 
+let searchForm = document.getElementById("searchForm");
+let searchInput = document.getElementById("search");
 
+searchForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    searchForm.appendChild(loadingIcon);
+    loadingIcon.style.display = "block";
+
+    let searchValue = searchInput.value.toLowerCase();
+
+    let peopleData = [];
+    let nextPage = `${base_url_people}`;
+    while (nextPage) {
+        let response = await fetch(nextPage);
+        let data = await response.json();
+        peopleData.push(...data.results);
+        nextPage = data.next;
+    }
+
+    let shipData = [];
+    nextPage = `${base_url_ship}`;
+    while (nextPage) {
+        let response = await fetch(nextPage);
+        let data = await response.json();
+        shipData.push(...data.results);
+        nextPage = data.next;
+    }
+
+    let filteredPeople = peopleData.filter(person => person.name.toLowerCase().includes(searchValue));
+    let filteredShips = shipData.filter(ship => ship.name.toLowerCase().includes(searchValue));
+
+    createTable3(filteredPeople, filteredShips);
+
+    searchInput.value = "";
+    loadingIcon.style.display = "none";
+});
+
+window.onload = function () {
+    searchInput.value = "";
+}
+
+// createTable 3 = search functionality table
+function createTable3(filteredPeople, filteredShips) {
+    table.innerHTML = "";
+
+    let headers;
+    if (filteredPeople.length > 0) {
+        headers = ["Name", "Height", "Mass", "Gender"];
+    } else if (filteredShips.length > 0) {
+        headers = ["Name", "Model", "Manufacturer"];
+    }
+
+    let headerRow = document.createElement("tr");
+    headers.forEach(header => {
+        let th = document.createElement("th");
+        th.textContent = header;
+        th.style.color = "yellow";
+        headerRow.appendChild(th);
+    });
+    table.appendChild(headerRow);
+
+    filteredPeople.forEach(person => {
+        let row = document.createElement("tr");
+        headers.forEach(header => {
+            let td = document.createElement("td");
+            td.textContent = person[header.toLowerCase()];
+            row.appendChild(td);
+        })
+        table.appendChild(row);
+    })
+
+    filteredShips.forEach(ship => {
+        let row = document.createElement("tr");
+        headers.forEach(header => {
+            let td = document.createElement("td");
+            td.textContent = ship[header.toLowerCase()];
+            row.appendChild(td);
+        })
+        table.appendChild(row);
+    })
+
+}
 
 /* To do list:
     1. Add validation to people capacity - done
@@ -258,12 +373,12 @@ function createTable2(ships) {
 
 /* 
     Sorting in the tables
-    Loading animation while the application gets the data
+    Loading animation while the application gets the data - done
     Nice error message when a request has been denied ( Ex: unavailable, request limit, no page like that, access denied )
     Add planets table
     Add pagination button for every page (create them dynamically)
-    Implement search functionality
-    Code refactoring (use async/await, reduce code duplication etc.)
+    Implement search functionality - done, need to fix search while data is displayed.
+    Code refactoring (use async/await, reduce code duplication etc.) - done, need to double-check
 
     https://github.com/sedc-codecademy/mkwd12-04-ajs/blob/main/G7/Class05/Workshop-part1/EXTRAFEATURES.md
 

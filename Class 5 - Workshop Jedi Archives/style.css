@@ -28,7 +28,7 @@ tr {
 
 #loader {
   display: none;
-  margin: 0 auto;
+  margin: auto;
 }
 
 thead tr {
@@ -75,13 +75,7 @@ a:hover {
   display: none;
 }
 
-#navigation {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  width: 75%;
-}
-
+#navigation,
 #navigationShip {
   display: flex;
   justify-content: space-around;
