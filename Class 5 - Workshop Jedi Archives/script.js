@@ -141,6 +141,11 @@ function createTable() {
     headers.forEach(header => {
         let th = document.createElement("th");
         th.textContent = header;
+        th.addEventListener("click", () => {
+            let sortKey = header.toLowerCase() === "birth year" ? "birth_year" : header.toLowerCase() === "appearances" ? "films" : header.toLowerCase();
+            peopleData.sort((a, b) => a[sortKey] > b[sortKey] ? 1 : -1);
+            createTable();
+        });
         headerRow.appendChild(th);
     });
 
@@ -220,6 +225,7 @@ function createTable2() {
     let table = document.createElement("table");
     let thead = document.createElement("thead");
     let tbody = document.createElement("tbody");
+    tableDiv.innerHTML = "";
 
     let headers = ["Name", "Model", "Manufacturer", "Cost", "People Capacity", "Class"];
     let headerRow = document.createElement("tr");
@@ -227,6 +233,26 @@ function createTable2() {
     headers.forEach(header => {
         let th = document.createElement("th");
         th.textContent = header;
+        th.addEventListener("click", () => {
+            let sortKey;
+            switch (header.toLowerCase()) {
+                case "cost":
+                    sortKey = "cost_in_credits";
+                    break;
+                case "class":
+                    sortKey = "starship_class";
+                    break;
+                case "people capacity":
+                    shipData.sort((a, b) => (parseInt(a.crew) + parseInt(a.passengers) - parseInt(b.crew) + parseInt(b.passengers)));
+                    createTable2();
+                    break;
+                default:
+                    sortKey = header.toLowerCase().replace(" ", "_");
+            }
+
+            shipData.sort((a, b) => a[sortKey] > b[sortKey] ? 1 : -1);
+            createTable2();
+        })
         headerRow.appendChild(th);
     });
 
@@ -365,14 +391,9 @@ function createTable3(filteredPeople, filteredShips) {
 
 }
 
-/* To do list:
-    1. Add validation to people capacity - done
-    2. Fix up all data as done in: person.gender and ship.passengers - done
-    3. Limit ship.cost - done
-*/
 
 /* 
-    Sorting in the tables
+    Sorting in the tables - People data done, Ship need to fix Cost and People Capacity
     Loading animation while the application gets the data - done
     Nice error message when a request has been denied ( Ex: unavailable, request limit, no page like that, access denied )
     Add planets table
