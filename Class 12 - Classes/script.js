@@ -144,3 +144,4 @@ console.log(electricCar.owner);
 // let teslaCar = new ElectricCar(6, "Tesla", "E2", 2000, 4, "Electric", true, "Bob"); // Error
 // teslaCar.owner;
 
+// Modules continue in Class 13
