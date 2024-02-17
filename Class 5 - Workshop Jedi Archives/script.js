@@ -164,6 +164,15 @@ function createTable() {
         headerRow.appendChild(th);
     });
 
+    // flag false, toggle ascending descending order
+
+    //     let sorting = false;
+
+    // btnSort.addEventListener("click", function(){
+    //     sorting = !sorting;
+    //     sorting ? descend() : ascend();
+    // });
+
     thead.appendChild(headerRow);
     table.appendChild(thead);
 
@@ -381,6 +390,7 @@ function createTable3(filteredPeople, filteredShips) {
         })
         table.appendChild(row);
         tableDiv.appendChild(table);
+        document.getElementById("people-navigation-container").style.display = "none";
     })
 
     filteredShips.forEach(ship => {
@@ -392,8 +402,8 @@ function createTable3(filteredPeople, filteredShips) {
         })
         table.appendChild(row);
         tableDiv.appendChild(table);
+        document.getElementById("ship-navigation-container").style.display = "none";
     })
-
 }
 
 function generateButtonsPeople(maxPages, fetchFunction, containerId) {
@@ -429,8 +439,8 @@ generateButtonsShips(4, fetchShips, "ship-navigation-container");
     Loading animation while the application gets the data - done
     Nice error message when a request has been denied ( Ex: unavailable, request limit, no page like that, access denied )
     Add planets table
-    Add pagination button for every page (create them dynamically)
-    Implement search functionality - done, need to fix search while data is displayed.
+    Add pagination button for every page (create them dynamically) - done
+    Implement search functionality - done, need to fix headers.
     Code refactoring (use async/await, reduce code duplication etc.) - done, need to double-check
 
     https://github.com/sedc-codecademy/mkwd12-04-ajs/blob/main/G7/Class05/Workshop-part1/EXTRAFEATURES.md
