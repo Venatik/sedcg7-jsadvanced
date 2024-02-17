@@ -125,6 +125,10 @@ async function nextPersonRequest() {
     }
     currentPage++;
     fetchPeople();
+
+    if (currentPage === 10) {
+        nextPersonButton.style.display = "none";
+    }
 }
 
 async function prevPersonRequest() {
@@ -230,6 +234,10 @@ async function nextShipRequest() {
     }
     shipPage++;
     fetchShips();
+
+    if (shipPage === 5) {
+        nextShipButton.style.display = "none";
+    }
 }
 
 async function prevShipRequest() {
@@ -239,6 +247,10 @@ async function prevShipRequest() {
     if (shipPage > 1) {
         shipPage--;
         fetchShips;
+    }
+
+    if (shipPage === 1) {
+        prevShipButton.style.display = "none";
     }
 }
 
@@ -442,6 +454,7 @@ generateButtonsShips(4, fetchShips, "ship-navigation-container");
     Add pagination button for every page (create them dynamically) - done
     Implement search functionality - done, need to fix headers.
     Code refactoring (use async/await, reduce code duplication etc.) - done, need to double-check
+    Next/Prev - sync to page
 
     https://github.com/sedc-codecademy/mkwd12-04-ajs/blob/main/G7/Class05/Workshop-part1/EXTRAFEATURES.md
 
