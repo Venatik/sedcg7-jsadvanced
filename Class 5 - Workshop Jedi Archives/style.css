@@ -82,3 +82,19 @@ a:hover {
   align-items: center;
   width: 75%;
 }
+
+#people-navigation-container > button {
+  background-color: yellow;
+  color: black;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+}
+
+#ship-navigation-container > button {
+  background-color: yellow;
+  color: black;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+}

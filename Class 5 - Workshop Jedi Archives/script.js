@@ -14,6 +14,7 @@ let nextShipPage = null;
 let prevShipPage = null;
 let shipData = null;
 let planetData = null;
+let table = document.getElementById("table");
 const base_url_people = "https://swapi.dev/api/people/";
 const base_url_ship = "https://swapi.dev/api/starships/"
 
@@ -61,6 +62,13 @@ async function fetchPeople(url = `${base_url_people}?page=${currentPage}`) {
     } finally {
         loadingIcon.style.display = "none";
     }
+
+    const navigationContainer = document.getElementById("people-navigation-container");
+    navigationContainer.style.display = "block";
+    document.getElementById("ship-navigation-container").style.display = "none";
+
+    let totalPagesPeople = Math.ceil(peopleData.count / 10);
+    return totalPagesPeople;
 }
 
 
@@ -94,6 +102,13 @@ async function fetchShips(url = `${base_url_ship}?page=${shipPage}`) {
     } finally {
         loadingIcon.style.display = "none";
     }
+
+    const navigationContainer = document.getElementById("ship-navigation-container");
+    navigationContainer.style.display = "block";
+    document.getElementById("people-navigation-container").style.display = "none";
+
+    let totalPagesShips = Math.ceil(shipData.count / 10);
+    return totalPagesShips;
 }
 
 function displayLoadingIcon() {
@@ -313,31 +328,22 @@ let searchInput = document.getElementById("search");
 searchForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
+    table.innerHTML = "";
+
     searchForm.appendChild(loadingIcon);
     loadingIcon.style.display = "block";
 
     let searchValue = searchInput.value.toLowerCase();
 
-    let peopleData = [];
-    let nextPage = `${base_url_people}`;
-    while (nextPage) {
-        let response = await fetch(nextPage);
-        let data = await response.json();
-        peopleData.push(...data.results);
-        nextPage = data.next;
-    }
+    // Fetch the matching people
+    let response = await fetch(`${base_url_people}?search=${searchValue}`);
+    let peopleData = await response.json();
+    let filteredPeople = peopleData.results;
 
-    let shipData = [];
-    nextPage = `${base_url_ship}`;
-    while (nextPage) {
-        let response = await fetch(nextPage);
-        let data = await response.json();
-        shipData.push(...data.results);
-        nextPage = data.next;
-    }
-
-    let filteredPeople = peopleData.filter(person => person.name.toLowerCase().includes(searchValue));
-    let filteredShips = shipData.filter(ship => ship.name.toLowerCase().includes(searchValue));
+    // Fetch the matching ships
+    response = await fetch(`${base_url_ship}?search=${searchValue}`);
+    let shipData = await response.json();
+    let filteredShips = shipData.results;
 
     createTable3(filteredPeople, filteredShips);
 
@@ -345,13 +351,10 @@ searchForm.addEventListener("submit", async (event) => {
     loadingIcon.style.display = "none";
 });
 
-window.onload = function () {
-    searchInput.value = "";
-}
-
 // createTable 3 = search functionality table
 function createTable3(filteredPeople, filteredShips) {
     table.innerHTML = "";
+    tableDiv.innerHTML = "";
 
     let headers;
     if (filteredPeople.length > 0) {
@@ -377,6 +380,7 @@ function createTable3(filteredPeople, filteredShips) {
             row.appendChild(td);
         })
         table.appendChild(row);
+        tableDiv.appendChild(table);
     })
 
     filteredShips.forEach(ship => {
@@ -387,9 +391,37 @@ function createTable3(filteredPeople, filteredShips) {
             row.appendChild(td);
         })
         table.appendChild(row);
+        tableDiv.appendChild(table);
     })
 
 }
+
+function generateButtonsPeople(maxPages, fetchFunction, containerId) {
+    const navigationContainer = document.getElementById(containerId);
+
+    for (let i = 1; i <= maxPages; i++) { // Assuming a maximum of 10 pages for simplicity
+        const button = document.createElement("button");
+        button.textContent = i;
+        button.addEventListener('click', () => fetchFunction(`${base_url_people}?page=${i}`));
+        navigationContainer.appendChild(button);
+    }
+}
+
+generateButtonsPeople(9, fetchPeople, "people-navigation-container");
+
+function generateButtonsShips(maxPages, fetchFunction, containerId) {
+    const navigationContainer = document.getElementById(containerId);
+
+    for (let i = 1; i <= maxPages; i++) { // Assuming a maximum of 10 pages for simplicity
+        const button = document.createElement("button");
+        button.textContent = i;
+        button.addEventListener('click', () => fetchFunction(`${base_url_ship}?page=${i}`));
+        navigationContainer.appendChild(button);
+    }
+}
+
+generateButtonsShips(4, fetchShips, "ship-navigation-container");
+
 
 
 /* 
